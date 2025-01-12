@@ -10,6 +10,7 @@ import javax.crypto.SecretKey;
 import org.springframework.stereotype.Service;
 
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 import net.ausiasmarch.wejeta.bean.LogindataBean;
 
@@ -39,15 +40,14 @@ public class AuthService {
     public String getToken() {
         // generar el token jwt
 
-        
         return Jwts.builder()
                 .id(UUID.randomUUID().toString())
                 .claims(getClaims())
                 .subject("authentication")
                 .issuer("wejeta.ausiasmarch.net")
                 .issuedAt(new Date())
-                .expiration(new Date(System.currentTimeMillis() + 6000000))                
-                .signWith(getSecretKey())                
+                .expiration(new Date(System.currentTimeMillis() + 6000000))
+                .signWith(getSecretKey(), Jwts.SIG.HS256)
                 .compact();
 
     }
