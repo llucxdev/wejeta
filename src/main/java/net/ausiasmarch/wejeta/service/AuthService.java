@@ -19,24 +19,24 @@ public class AuthService {
     UsuarioRepository oUsuarioRepository;
 
     public boolean checkLogin(LogindataBean oLogindataBean) {
-
         if (oUsuarioRepository.findByEmailAndPassword(oLogindataBean.getEmail(), oLogindataBean.getPassword())
                 .isPresent()) {
             return true;
         } else {
             return false;
         }
-
     }
 
-    private Map<String, String> getClaims() {
+    private Map<String, String> getClaims(String email) {
         Map<String, String> claims = new HashMap<>();
-        claims.put("email", "wejeta@ausiasmarch.net");
+        claims.put("email",  email);
         return claims;
     };
 
-    public String getToken() {
-        return JWTHelper.generateToken(getClaims());
+    public String getToken(String email) {
+        return JWTHelper.generateToken(getClaims(email));
     }
 
+
+    
 }

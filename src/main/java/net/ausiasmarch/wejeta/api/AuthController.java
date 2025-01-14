@@ -22,7 +22,7 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<String> login(@RequestBody LogindataBean oLogindataBean) {
         if (oAuthService.checkLogin(oLogindataBean)) {
-            return ResponseEntity.ok("\"" + oAuthService.getToken() + "\"");
+            return ResponseEntity.ok("\"" + oAuthService.getToken(oLogindataBean.getEmail()) + "\"");
         } else {
             return ResponseEntity.status(401).body("\"" + "Error de autenticación" + "\"");
         }
