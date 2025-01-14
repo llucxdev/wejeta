@@ -42,6 +42,8 @@ public class UsuarioEntity {
 
     @Email
     private String email;
+    
+    private String password;
 
     @ManyToOne(fetch = jakarta.persistence.FetchType.EAGER)
     @JoinColumn(name = "id_tipousuario")

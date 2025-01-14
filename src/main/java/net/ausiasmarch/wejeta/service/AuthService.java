@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import net.ausiasmarch.wejeta.bean.LogindataBean;
+import net.ausiasmarch.wejeta.repository.UsuarioRepository;
 
 @Service
 public class AuthService {
@@ -14,13 +15,18 @@ public class AuthService {
     @Autowired
     JWTService JWTHelper;
 
+    @Autowired
+    UsuarioRepository oUsuarioRepository;
+
     public boolean checkLogin(LogindataBean oLogindataBean) {
-        if (oLogindataBean.getEmail().equals("wejeta@ausiasmarch.net")
-                && oLogindataBean.getPassword().equals("ausias")) {
+
+        if (oUsuarioRepository.findByEmailAndPassword(oLogindataBean.getEmail(), oLogindataBean.getPassword())
+                .isPresent()) {
             return true;
         } else {
             return false;
         }
+
     }
 
     private Map<String, String> getClaims() {
