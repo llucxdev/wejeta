@@ -2,6 +2,7 @@ package net.ausiasmarch.wejeta.filter;
 
 import java.io.IOException;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import jakarta.servlet.Filter;
@@ -11,10 +12,13 @@ import jakarta.servlet.ServletRequest;
 import jakarta.servlet.ServletResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import net.ausiasmarch.wejeta.helper.JWTHelper;
+import net.ausiasmarch.wejeta.service.JWTService;
 
 @Component
 public class JWTFilter implements Filter {
+
+    @Autowired
+    JWTService JWTHelper;
 
     @Override
     public void doFilter(ServletRequest oServletRequest,

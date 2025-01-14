@@ -1,24 +1,32 @@
-package net.ausiasmarch.wejeta.helper;
+package net.ausiasmarch.wejeta.service;
 
 import java.util.Date;
 import java.util.Map;
 import java.util.UUID;
 import javax.crypto.SecretKey;
+
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 
-public class JWTHelper {
+@Service
+public class JWTService {
 
-    private static final String SUBJECT="authentication";
-    private static final String ISSUER="wejeta.ausiasmarch.net";
+    @Value("${jwt.subject}")
+    private String SUBJECT;
+    @Value("${jwt.issuer}")
+    private String ISSUER;
+    @Value("${jwt.secret}")
+    private String secretKey;
 
-    private static SecretKey getSecretKey() {
-        String secretKey = "wejeta.ausias.54654654654654654bcvb54c6v5b46cv4b65c4v6b5c4v6b54c6seddffjrjrifjfdn";
+    private SecretKey getSecretKey() {    
         return Keys.hmacShaKeyFor(secretKey.getBytes());
     }
 
-    public static String generateToken(Map<String, String> claims) {
+    public String generateToken(Map<String, String> claims) {
         return Jwts.builder()
                 .id(UUID.randomUUID().toString())
                 .claims(claims)
@@ -30,11 +38,11 @@ public class JWTHelper {
                 .compact();
     }
 
-    private static Claims getAllClaimsFromToken(String token) {
+    private Claims getAllClaimsFromToken(String token) {
         return Jwts.parser().verifyWith(getSecretKey()).build().parseSignedClaims(token).getPayload();
     }
 
-    public static String validateToken(String sToken) {
+    public String validateToken(String sToken) {
         Claims oClaims = getAllClaimsFromToken(sToken);
 
         if (oClaims.getExpiration().before(new Date())) {
