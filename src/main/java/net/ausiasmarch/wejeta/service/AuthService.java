@@ -6,7 +6,9 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import jakarta.servlet.http.HttpServletRequest;
 import net.ausiasmarch.wejeta.bean.LogindataBean;
+import net.ausiasmarch.wejeta.entity.UsuarioEntity;
 import net.ausiasmarch.wejeta.repository.UsuarioRepository;
 
 @Service
@@ -17,6 +19,9 @@ public class AuthService {
 
     @Autowired
     UsuarioRepository oUsuarioRepository;
+
+    @Autowired
+    HttpServletRequest oHttpServletRequest;
 
     public boolean checkLogin(LogindataBean oLogindataBean) {
         if (oUsuarioRepository.findByEmailAndPassword(oLogindataBean.getEmail(), oLogindataBean.getPassword())
@@ -29,7 +34,7 @@ public class AuthService {
 
     private Map<String, String> getClaims(String email) {
         Map<String, String> claims = new HashMap<>();
-        claims.put("email",  email);
+        claims.put("email", email);
         return claims;
     };
 
@@ -37,6 +42,13 @@ public class AuthService {
         return JWTHelper.generateToken(getClaims(email));
     }
 
+    public UsuarioEntity getTokenUser() {
+        String email = oHttpServletRequest.getAttribute("email").toString();
+        return oUsuarioRepository.findByEmail(email).get();
+    }
 
-    
+    public boolean isSessionActive(){
+        return oHttpServletRequest.getAttribute("email") != null;
+    }
+
 }
