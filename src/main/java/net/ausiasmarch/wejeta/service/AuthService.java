@@ -42,13 +42,35 @@ public class AuthService {
         return JWTHelper.generateToken(getClaims(email));
     }
 
-    public UsuarioEntity getTokenUser() {
+    public UsuarioEntity getUsuarioFromToken() {
         String email = oHttpServletRequest.getAttribute("email").toString();
         return oUsuarioRepository.findByEmail(email).get();
     }
 
-    public boolean isSessionActive(){
+    public boolean isSessionActive() {
         return oHttpServletRequest.getAttribute("email") != null;
     }
+
+    public boolean isAdmin() {
+        return this.getUsuarioFromToken().getTipousuario().getId() == 1L;
+    }
+
+    public boolean isContable() {
+        return this.getUsuarioFromToken().getTipousuario().getId() == 2L;
+    }
+
+    public boolean isAuditor() {
+        return this.getUsuarioFromToken().getTipousuario().getId() == 3L;
+    }
+
+    public boolean isAdminOrContable() {
+        return this.isAdmin() || this.isContable();
+    }
+
+    public boolean isContableWithItsOwnData(Long id) {
+        UsuarioEntity oUsuarioEntity = this.getUsuarioFromToken();
+        return this.isContable() && oUsuarioEntity.getId() == id;
+    }
+
 
 }

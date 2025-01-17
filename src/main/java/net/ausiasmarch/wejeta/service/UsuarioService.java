@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import net.ausiasmarch.wejeta.entity.UsuarioEntity;
+import net.ausiasmarch.wejeta.exception.UnauthorizedAccessException;
 import net.ausiasmarch.wejeta.repository.UsuarioRepository;
 
 @Service
@@ -24,16 +25,13 @@ public class UsuarioService {
             return "Bienvenido a la zona restringida";
         }
     }
-
+    
     public UsuarioEntity get(Long id){
-        if (oAuthService.isSessionActive()) {
+        if (oAuthService.isContableWithItsOwnData(id) || oAuthService.isAdmin()) {
             return oUsuarioRepository.findById(id).get();
         } else {
-            return null;
-        }
-        
+            throw new UnauthorizedAccessException("No tienes permisos para acceder a esta zona");
+        }        
     }
-
-
 
 }
